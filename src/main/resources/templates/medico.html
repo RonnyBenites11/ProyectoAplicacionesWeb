@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Mantenimiento Medico</title>
+
+ 	<!-- Bootstrap CSS -->
+    <link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet">
+	<link th:href="@{/resources/css/dataTables.bootstrap5.min.css}" rel="stylesheet">  
+	<link th:href="@{/resources/datepicker/bootstrap-datepicker.css}" rel="stylesheet">
+	<link th:href="@{/resources/css/bootstrap-icons.css}" rel="stylesheet">
+	
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+	
+	<link rel="stylesheet" th:href="@{/resources/alertifyjs/css/alertify.css}">
+	<link rel="stylesheet" th:href="@{/resources/alertifyjs/css/alertify.min.css}"> 
+	
+	
+	
+	<style>
+		.modal-header{
+		color:#fff;
+		background: #428bca;
+		display: flex;
+  		justify-content: center;  		
+		}
+		.help-block {
+		  		color: red;
+		}
+		.form-group.has-error .form-control-label {
+		  color: red;
+		}
+		.form-group.has-error .form-control {
+		  border: 1px solid red;
+		  box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+		.alertify .ajs-dialog {
+		    top: 50%;
+		    transform: translateY(-50%);
+		    margin: auto;
+		}
+		.ajs-header{
+			background-color: #286090 !important;
+			color: white !important;
+			/*text-align: center;*/
+			font-size: 18px;
+			font-weight: bold;
+		}
+		.ajs-ok{
+			color: #fff;
+		    background-color: #007bff;
+		    border-color: #007bff;
+		}
+		.ajs-cancel{
+			color: #fff;
+		    background-color: #dc3545;
+		    border-color: #dc3545;
+		}
+	</style>
+	  
+</head>
+<body>
+	<div class="container">
+		
+		<h3 class="text-center">LISTADO DE MEDICOS</h3>	  
+	  	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMedicamento">
+	  		Nuevo Medico
+	  	</button>
+	  	
+	  	<!-- Modal PARA REGISTRAR-->
+		<div class="modal fade" id="modalMedicamento" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="staticBackdropLabel">MEDICO</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        <form id="formMedicamento" action="/medico/grabar" method="post" class="row g-3">
+		         <div class="form-group col-md-4">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Código</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-file-person"></i></span>
+				      <input type="text" class="form-control" name="codigo" id="idCodigo" readonly value="0">
+				    </div>
+				  </div>		  
+				  <div class="form-group col-12">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Nombre</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-file-person"></i></span>
+				      <input type="text" class="form-control" name="nombre" id="idNombre">
+				    </div>
+				  </div>
+				  <div class="form-group col-md-6">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Paterno</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-bank2"></i></span>
+				      <input type="text" class="form-control" name="paterno" id="idPaterno">
+				    </div>
+				  </div>
+				  <div class="form-group col-md-6">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Materno</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-coin"></i></span>
+				      <input type="text" class="form-control" name="materno" id="idMaterno">
+				    </div>
+				  </div>
+				  <div class="form-group col-md-4">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Fecha Nacimiento</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-calendar-date"></i></span>
+				      <i class="fas fa-calendar-week form-control-feedback2"></i>
+												    <input type="text" style="background-color:#aed6f1" class="form-control" id="usr1"
+												    													  name="fecha" placeholder="YYYY-MM-DD" autocomplete="off" >
+							
+				    </div>
+				  </div>
+				  <div class="form-group col-md-4">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Estado Civil</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-prescription2"></i></span>
+				      <select class="form-select form-control" name="estado" id="idEstado">
+					  <option value=" ">[Seleccione Estado]</option>
+					  <option value="Soltero(a)">Soltero(a)</option>
+					  <option value="Casado(a)">Casado(a)</option>
+					  <option value="Viudo(a)">Viudo(a)</option>
+					  <option value="Divorciado(a)">Divorciado(a)</option>
+					</select>
+				    </div>
+				  </div>
+				  <div class="form-group col-md-4">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Número Hijos</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-coin"></i></span>
+				      <input type="text" class="form-control" name="hijos" id="idHijos">
+				    </div>
+				  </div>
+				  <div class="form-group col-md-6">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Sede</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-prescription2"></i></span>
+				      <select class="form-select form-control" name="sede" id="idSede">
+					  <option value=" ">[Seleccione Sede]</option>
+					  <option th:each="bean:${sedes}" 
+					  	th:utext="${bean.nombre}"
+					  	th:value="${bean.codigo}"/>
+					</select>
+				    </div>
+				  </div>
+				  <div class="form-group col-md-6">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Especialidad</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-prescription2"></i></span>
+				      <select class="form-select form-control" name="especialidad" id="idEspecialidad">
+					  <option value=" ">[Seleccione Especialidad]</option>
+					</select>
+				    </div>
+				  </div>
+
+				  <div class="modal-footer">
+			      	<button type="submit" class="btn btn-primary"><i class="bi bi-save2"></i> Registrar</button>
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle-fill"></i> Cerrar</button>
+			      </div>
+				</form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	    <!--fin modal PARA REGISTRAR-->
+
+	    <div class="mt-5">
+	    <table id="tableMedicamento" class="table table-striped" style="width:100%">
+        <thead>
+							   <tr>
+					                <th>Código</th>
+					                <th>Nombre</th>
+					                <th>Paterno</th>
+					                <th>Materno</th>
+					                <th>Fecha Nac.</th>
+					                <th>Estado Civil</th>
+					                <th></th>
+					                <th></th>
+					            </tr>
+							  </thead>
+							  <tbody>
+								<tr th:each="row:${medicos}">
+							      <td th:text="${row.codigo}"></td>
+							      <td th:text="${row.nombre}"></td>
+							      <td th:text="${row.paterno}"></td>
+							      <td th:text="${row.materno}"></td>
+							      <td th:text="${row.fecha}"></td>
+							      <td th:text="${row.estado}"></td>
+							      <td><a class="btn btn-info btn-editar" data-bs-toggle="modal" data-bs-target="#modalMedicamento"><i class="bi bi-pencil"></i></a></td>
+							      <td><a class="btn btn-danger btn-eliminar"><i class="bi bi-trash-fill"></i></a></td>
+							    </tr>   
+							  </tbody>
+    </table>
+	</div>    
+	    
+	  
+	</div>
+	
+	<!-- JS principal -->
+	<script th:src="@{/resources/js/jquery-3.5.1.js}"></script>
+
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+    <script th:src="@{/resources/js/bootstrap.bundle.min.js}"></script>
+
+	<!-- JS para la tabla -->
+	<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+	<!--JS para validar  -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.0/js/bootstrapValidator.js"></script>
+	
+	<!--JS para Calendario  -->
+	<script th:src="@{/resources/datepicker/bootstrap-datepicker.js}"></script> 
+	
+	<script	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	
+	<script th:src="@{/resources/alertifyjs/alertify.js}"></script>
+	<script th:src="@{/resources/alertifyjs/alertify.min.js}"></script>
+	
+	
+	
+	
+	<script>
+		let codigoEspecialidad=0;
+		
+		$(function() {
+			$('#usr1').datepicker({
+				'format': 'yyyy-mm-dd',
+				'autoclose': true
+			});
+	
+		});	
+		
+		//asignar evento click a todos los botones con nombre de clase "btn-editar"
+		$(document).on("click",".btn-editar",function(){
+			//variable
+			let cod;
+			//obtener còdigo según la fila donde se hizo click en botón del lapiz 
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			//función get
+			$.get("buscarPorID?codigo="+cod,function(response){
+				console.log(response);
+				$("#idCodigo").val(response.codigo);
+				$("#idNombre").val(response.nombre);
+				$("#idPaterno").val(response.paterno);
+				$("#idMaterno").val(response.materno);
+				$("#usr1").val(response.fecha);
+				$("#idEstado").val(response.estado);
+				$("#idHijos").val(response.hijos);
+				$("#idSede").val(response.especialidad.sede.codigo);
+				codigoEspecialidad=response.especialidad.codigo;
+				$("#idSede").trigger("change");
+				
+			})
+		})	
+		
+		//asignar evento click a todos los botones con nombre de clase "btn-eliminar"
+		$(document).on("click",".btn-eliminar",function(){
+			//variable
+			let cod;
+			//obtener còdigo según la fila donde se hizo click en botón eliminar 
+			cod=$(this).parents("tr").find("td")[0].innerHTML;
+			
+			alertify.confirm("Seguro de eliminar?",
+			  function(){
+			    window.location="eliminarPorID?codigo="+cod;
+			  },
+			  function(){
+			    alertify.error('Cancel');
+			  });
+		})
+			
+		$(document).on("change","#idSede",function(){
+			let codSede=$(this).val();
+			$.get("listarPorSede?codigo="+codSede,function(response){
+				$("#idEspecialidad").empty().append("<option>[Seleccione Especialidad]</option>");
+				$.each(response,function(index,item){
+					$("#idEspecialidad").append("<option value='"+item.codigo+"'>"+item.descripcion+"</option>");
+				})
+				$("#idEspecialidad").val(codigoEspecialidad);
+
+			})
+
+		})
+			
+			
+			
+	</script>
+
+	<script th:inline="javascript" th:if="${MENSAJE!=null}">
+		let msj;
+		msj=/*[[${MENSAJE}]]*/		
+		
+		toastr.success(msj, toastr.options = {
+			"timeOut": "2000",
+			"positionClass " : " toast-top-right ",
+		});
+	</script>
+
+
+
+
+
+	<script>
+		$(document).ready(function () {
+		    $('#tableMedicamento').DataTable();
+		    //validación
+		    $('#formMedicamento').bootstrapValidator({      
+	        	 fields:{
+	        		 	nombre:{
+	        		 		validators:{
+	        		 			notEmpty:{
+	        		 				message:'Campo nombre es obligatorio'
+	        		 			}
+	        		 		}
+	        		 	},
+	        		 	descripcion:{
+	        		 		validators:{
+	        		 			notEmpty:{
+	        		 				message:'Campo descripción es obligatorio'
+	        		 			}
+	        		 		}
+	        		 	},
+	        		 	stock:{
+	        		 		validators:{
+	        		 			notEmpty:{
+	        		 				message:'Campo materno es obligatorio'
+	        		 			}
+	        		 		}
+	        		 	},
+	        		 	precio:{
+	        		 		validators:{
+	        		 			notEmpty:{
+	        		 				message:'Campo hijos es obligatorio'
+	        		 			}
+	        		 		}
+	        		 	},
+	        		 	tipo:{
+	        		 		validators:{
+	        		 			notEmpty:{
+	        		 				message:'Campo tipo es obligatorio'
+	        		 			}
+	        		 		}
+	        		 	},
+	        		 	fecha: {
+		     	    		//selector:'#usr1',   
+		                    validators: {    
+		                        notEmpty: {    
+		                            message: 'Seleccione fecha '    
+		                        },
+		                        date: {
+		                            format: 'YYYY-MM-DD',
+		                            message: 'The format is dd/mm/yyyy'
+		                        },
+		                    }    
+		                },
+		    
+		    
+	        	 }
+	        })
+	        $('#usr1').on('changeDate', function(e) {	
+				$('#formMedicamento').data('bootstrapValidator').updateStatus('fecha', 'VALIDATED');
+			})
+		    $('#modalMedicamento')
+	        .on('hidden.bs.modal',function(){
+				$("#formMedicamento").bootstrapValidator('resetForm',true);
+				$("#idCodigo").val(0)
+			})
+		    
+		});
+	</script>
+	
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
